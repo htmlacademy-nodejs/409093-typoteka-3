@@ -1,5 +1,6 @@
 'use strict';
 
+const chalk = require(`chalk`);
 const run = () => {
   const text = `
   Программа запускает http-сервер и формирует файл с данными для api.
@@ -11,7 +12,7 @@ const run = () => {
   --generate <count>    формирует файл mocks.json
   `;
 
-  console.log(text);
+  console.info(chalk.gray(text));
 };
 
 module.exports = {
