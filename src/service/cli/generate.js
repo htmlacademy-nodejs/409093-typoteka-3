@@ -7,15 +7,13 @@ const {
   shuffle,
 } = require(`../../utils`);
 const {
-  TITLES,
-  ANNOUNCES,
-  CATEGORIES
-} = require(`./mockData`);
-const {
   PUBLICATION_PERIOD,
   DEFAULT_COUNT,
   FILE_NAME,
-  EXIT_CODE
+  EXIT_CODE,
+  FILE_SENTENCES_PATH,
+  FILE_TITLES_PATH,
+  FILE_CATEGORIES_PATH
 } = require(`../../constants`);
 
 const getDate = () => {
@@ -25,20 +23,33 @@ const getDate = () => {
   return `${publicationDate.getFullYear()}-${publicationDate.getMonth()}-${publicationDate.getDate()} ${publicationDate.getHours()}:${publicationDate.getMinutes()}:${publicationDate.getSeconds()}`;
 };
 
-const generateArticles = (count) => (
+const readContent = async (filePath) => {
+  try {
+    const content = await fs.readFile(filePath, `utf8`);
+    return content.split(`\n`);
+  } catch (err) {
+    console.error(chalk.red(err));
+    return [];
+  }
+};
+
+const generateArticles = (count, titles, categories, sentences) => (
   Array(count).fill().map(() => ({
-    title: TITLES[getRandomInt(0, TITLES.length - 1)],
-    announce: shuffle(ANNOUNCES).slice(1, 5).join(` `),
-    fullText: shuffle(ANNOUNCES).slice(1, ANNOUNCES.length - 1).join(` `),
+    title: titles[getRandomInt(0, titles.length - 1)],
+    announce: shuffle(sentences).slice(1, 5).join(` `),
+    fullText: shuffle(sentences).slice(1, sentences.length - 1).join(` `),
     createdDate: getDate(),
-    category: [CATEGORIES[getRandomInt(0, CATEGORIES.length - 1)]]
+    category: [categories[getRandomInt(0, categories.length - 1)]]
   }))
 );
 
 const run = async (args) => {
+  const sentences = await readContent(FILE_SENTENCES_PATH);
+  const titles = await readContent(FILE_TITLES_PATH);
+  const categories = await readContent(FILE_CATEGORIES_PATH);
   const [count] = args;
   const countArticles = Number.parseInt(count, 10) || DEFAULT_COUNT;
-  const content = JSON.stringify(generateArticles(countArticles));
+  const content = JSON.stringify(generateArticles(countArticles, titles, categories, sentences));
 
   try {
     await fs.writeFile(FILE_NAME, content);
