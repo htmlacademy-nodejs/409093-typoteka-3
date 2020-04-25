@@ -20,8 +20,9 @@ const {
 const getDate = () => {
   const currentDate = new Date();
   const earliestDate = currentDate - PUBLICATION_PERIOD;
-  const publicationDate = new Date(getRandomInt(earliestDate, currentDate));
-  return `${publicationDate.getFullYear()}-${publicationDate.getMonth()}-${publicationDate.getDate()} ${publicationDate.getHours()}:${publicationDate.getMinutes()}:${publicationDate.getSeconds()}`;
+  const publicationDate = new Date(getRandomInt(earliestDate, currentDate)).toISOString();
+
+  return publicationDate.replace(/T/, ` `).replace(/\..+/, ``);
 };
 
 const readContent = async (filePath) => {
