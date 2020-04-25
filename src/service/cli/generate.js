@@ -40,7 +40,7 @@ const generateArticles = (count, titles, categories, sentences) => (
     announce: shuffle(sentences).slice(1, 5).join(` `),
     fullText: shuffle(sentences).slice(1, sentences.length - 1).join(` `),
     createdDate: getDate(),
-    category: [categories[getRandomInt(0, categories.length - 1)]]
+    category: shuffle(categories).slice(getRandomInt(0, categories.length - 1)),
   }))
 );
 
