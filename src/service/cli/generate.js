@@ -10,11 +10,12 @@ const {
   PUBLICATION_PERIOD,
   DEFAULT_COUNT,
   FILE_NAME,
+  MAX_COUNT,
   EXIT_CODE,
   FILE_SENTENCES_PATH,
   FILE_TITLES_PATH,
   FILE_CATEGORIES_PATH
-} = require(`../../constants`);
+} = require(`../constants`);
 
 const getDate = () => {
   const currentDate = new Date();
@@ -49,14 +50,22 @@ const run = async (args) => {
   const categories = await readContent(FILE_CATEGORIES_PATH);
   const [count] = args;
   const countArticles = Number.parseInt(count, 10) || DEFAULT_COUNT;
-  const content = JSON.stringify(generateArticles(countArticles, titles, categories, sentences));
-
-  try {
-    await fs.writeFile(FILE_NAME, content);
-    console.info(chalk.green(`Operation success. File created.`));
+  if (countArticles > MAX_COUNT) {
+    console.error(chalk.green(`Не больше 1000 публикаций`));
     process.exitCode = EXIT_CODE.success;
-  } catch (err) {
-    console.error(chalk.red(`Can't write data to file...`));
+  } else if (titles.length && sentences.length && categories.length) {
+    const content = JSON.stringify(generateArticles(countArticles, titles, categories, sentences));
+
+    try {
+      await fs.writeFile(FILE_NAME, content);
+      console.info(chalk.green(`Operation success. File created.`));
+      process.exitCode = EXIT_CODE.success;
+    } catch (err) {
+      console.error(chalk.red(`Can't write data to file...`));
+      process.exitCode = EXIT_CODE.error;
+    }
+  } else {
+    console.error(chalk.red(`Can't read file...`));
     process.exitCode = EXIT_CODE.error;
   }
 };
