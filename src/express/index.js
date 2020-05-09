@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require(`express`);
+const chalk = require(`chalk`);
 
 const articlesRoutes = require(`./routes/articles-routes`);
 const myRoutes = require(`./routes/my-routes`);
@@ -14,4 +15,6 @@ app.use(`/articles`, articlesRoutes);
 app.use(`/my`, myRoutes);
 app.use(`/`, mainRoutes);
 
-app.listen(DEFAULT_PORT);
+app.listen(DEFAULT_PORT, () => {
+  console.info(chalk.green(`Сервер запущен на: http://localhost:${DEFAULT_PORT}`));
+});
