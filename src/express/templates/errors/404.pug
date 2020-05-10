@@ -1,0 +1,20 @@
+doctype html
+html(lang='ru')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width,initial-scale=1')
+    meta(name='Description', content='Личный блог Типотека')
+    title Типотека
+    link(rel='preload', href='./fonts/Inter-Regular.woff2', as='font', crossorigin='anonymous')
+    link(rel='preload', href='./fonts/Inter-Medium.woff2', as='font', crossorigin='anonymous')
+    link(rel='preload', href='./fonts/SFProDisplay-Regular.woff2', as='font', crossorigin='anonymous')
+    link(rel='stylesheet', href='css/style.min.css')
+  body
+    .wrapper-color
+      include header.pug
+      main
+        h1.visually-hidden Ошибка 404
+        section.error
+          h2.error__title.title.title--big Похоже ошиблись адресом
+          a.error__link.text.text--big(href='/') Вернуться на главную
+      include ../partials/footer.pug
